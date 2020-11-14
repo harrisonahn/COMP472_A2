@@ -6,6 +6,8 @@ import pandas as pd
 from collections import deque
 import heapq
 from queue import PriorityQueue
+import time
+
 
 def CheckIfStateExists(node,list):
     if node in list:
@@ -138,9 +140,10 @@ def move_wrap(node):
 
 def move_diagonal(node): 
     li = list(node[1].split(" ")) 
+    li2 = list(li)
     index_of_empty = li.index('0')
     newboard1 = li
-    newboard2 = li
+    newboard2 = li2
     newnode1 = (node[0],node[1])
     newnode2 = (node[0],node[1])
     if (index_of_empty==0):
@@ -150,7 +153,7 @@ def move_diagonal(node):
         newboard1 = s.join(newboard1)
         newnode1 = (node[0]+3,newboard1)
         #-------------------------------
-        newboard2[index_of_empty],newboard2[index_of_empty+7] = newboard2[index_of_empty+5],newboard2[index_of_empty]
+        newboard2[index_of_empty],newboard2[index_of_empty+7] = newboard2[index_of_empty+7],newboard2[index_of_empty]
         s = ' '
         newboard2 = s.join(newboard2)
         newnode2 = (node[0]+3,newboard2)
@@ -186,8 +189,7 @@ def move_diagonal(node):
         newboard2[index_of_empty],newboard2[index_of_empty-7] = newboard2[index_of_empty-7],newboard2[index_of_empty]
         s = ' '
         newboard2 = s.join(newboard2)
-        newnode2 = (node[0]+3,newboard2)
-        
+        newnode2 = (node[0]+3,newboard2)   
     else:
         possible=False
 
@@ -220,12 +222,13 @@ def get_possible_moves(node):
     
     return possible_moves
 
-def filter_unvalid_moves(explored_list,init):
+def filter_unvalid_moves(explored_list,init,goalstate):
     """Filter unvalid moves by reverse parsing
     the explored set and creating a final path list
     """
+    if(GoalTest(goalstate[1])==False):
+        return "no solution"
     print(explored_list)
-    explored_list.reverse()
     final_path = []
     print("Size of explored_list")
     print(len(explored_list) - 1)
@@ -234,75 +237,101 @@ def filter_unvalid_moves(explored_list,init):
     final_path.append(currentn)
     print("initial node")
     print(currentn)
-    while currentn[0]>0:
-        nextn = explored_list[i+1]
+    while currentn != goalstate:
+        if(i+1>(len(explored_list)-1)):
+            #do something
+            print("Dead end Found at: ")
+            print(currentn)
+            explored_list.remove(currentn)
+            final_path.remove(currentn)
+            lastfpn = final_path[len(final_path)-1]
+            print("Value of i")
+            i = explored_list.index(lastfpn)
+            print(i)
+            print("New Current Node: ")
+            currentn = explored_list[i]
+            print(currentn)
+            nextn= explored_list[i+1]
+            print("New Next Node: ")
+            print(nextn)
+            #print(explored_list)
+            #break
+        else:
+            nextn = explored_list[i+1]
         possible_moves = get_possible_moves(currentn)
-        if(is_in_queue(nextn[1],possible_moves) and nextn[0]<currentn[0]):
+        if(is_in_queue(nextn[1],possible_moves) and nextn[0]>currentn[0]):
             print("found next node")
             print(nextn)
             final_path.append(nextn)
             currentn = nextn
         i=i+1
-    final_path.reverse()
+    #final_path.reverse()
     return final_path
+def main():
+    openlist = []
+    closedlist = []
+    board = RetrievePuzzleFromCSV('test1.txt')
+    temp = board
 
-openlist = []
-closedlist = []
-board = RetrievePuzzleFromCSV('test1.txt')
-temp = board
+    initialState = (0,board[0])
 
-initialState = (0,board[0])
+    frontier = PriorityQueue()
+    explored = []
 
-frontier = PriorityQueue()
-explored = []
+    frontier.put(initialState)
+    tempfrontier = []
 
-frontier.put(initialState)
-tempfrontier = []
+    tempfrontier.append(initialState)
+    currentNode = (0,0)
+    constraint = 10000
+    i=0
+    t_end = time.time() + 60
+    while(frontier.qsize()>0 and time.time()< t_end):
+        currentNode = frontier.get()
+        print("Current Node: ")
+        print(currentNode)
+        tempfrontier.remove(currentNode)
+        explored.append(currentNode)
+        if(GoalTest(currentNode[1])):
+            print("Solution Found")
+            break
+        possible_actions = get_possible_moves(currentNode)
+        for child_node in possible_actions:
+            print("Current Child Node: ")
+            print(child_node)
+            print("Is Current Child Node in Open List?")
+            print(is_in_queue(child_node[1],tempfrontier))
+            print("Is Current Child Node not in Closed List?")
+            print(is_in_queue(child_node[1],explored))
+            if (is_in_queue(child_node[1],tempfrontier)==False) and (is_in_queue(child_node[1],explored)==False):
+                    print("Adding this child node to open list")
+                    print(child_node)
+                    frontier.put(child_node)
+                    tempfrontier.append(child_node)
+            elif(is_in_queue(child_node[1],tempfrontier)):
+                temp = RenewQueue(child_node,tempfrontier)
+                tempq = temp[0]
+                temptq = temp[1]
+                if (tempq.empty()==False):
+                    print("FOUND SAME STATE WITH LESS PATH-COST")
+                    frontier = tempq
+                    tempfrontier = temptq
+        i=i+1
+    final_path = filter_unvalid_moves(explored,initialState,currentNode)
 
-tempfrontier.append(initialState)
-
-constraint = 10000
-i=0
-while(frontier.qsize()>0 and i<constraint):
-    currentNode = frontier.get()
-    print("Current Node: ")
-    print(currentNode)
-    tempfrontier.remove(currentNode)
-    explored.append(currentNode)
-    if(GoalTest(currentNode[1])):
-        print("Solution Found")
-        break
-    possible_actions = get_possible_moves(currentNode)
-    for child_node in possible_actions:
-        print("Current Child Node: ")
-        print(child_node)
-        print("Is Current Child Node in Open List?")
-        print(is_in_queue(child_node[1],tempfrontier))
-        print("Is Current Child Node not in Closed List?")
-        print(is_in_queue(child_node[1],explored))
-        if (is_in_queue(child_node[1],tempfrontier)==False) and (is_in_queue(child_node[1],explored)==False):
-                print("Adding this child node to open list")
-                print(child_node)
-                frontier.put(child_node)
-                tempfrontier.append(child_node)
-        elif(is_in_queue(child_node[1],tempfrontier)):
-            temp = RenewQueue(child_node,tempfrontier)
-            tempq = temp[0]
-            temptq = temp[1]
-            if (tempq.empty()==False):
-                print("FOUND SAME STATE WITH LESS PATH-COST")
-                frontier = tempq
-                tempfrontier = temptq
-    i=i+1
-
-final_path = filter_unvalid_moves(explored,initialState)
-
-print(final_path)
-
-
+    print(final_path)
 
 
-   
+
+#board = RetrievePuzzleFromCSV('test1.txt')
+#temp = board
+
+#initialState = (0,board[0])
+
+#print(move_diagonal(initialState))
+
+if __name__ == "__main__":
+    main()
     
     
         
