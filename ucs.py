@@ -228,40 +228,40 @@ def filter_unvalid_moves(explored_list,init,goalstate):
     """
     if(GoalTest(goalstate[1])==False):
         return "no solution"
-    print(explored_list)
+    #print(explored_list)
     final_path = []
-    print("Size of explored_list")
-    print(len(explored_list) - 1)
+    #print("Size of explored_list")
+    #print(len(explored_list) - 1)
     i=0
     currentn = explored_list[i]
     final_path.append(currentn)
-    print("initial node")
-    print(currentn)
+    #print("initial node")
+    #print(currentn)
     while currentn != goalstate:
         if(i+1>(len(explored_list)-1)):
             #do something
-            print("Dead end Found at: ")
-            print(currentn)
+            #print("Dead end Found at: ")
+            #print(currentn)
             explored_list.remove(currentn)
             final_path.remove(currentn)
             lastfpn = final_path[len(final_path)-1]
-            print("Value of i")
+            #print("Value of i")
             i = explored_list.index(lastfpn)
             print(i)
-            print("New Current Node: ")
+            #print("New Current Node: ")
             currentn = explored_list[i]
-            print(currentn)
+            #print(currentn)
             nextn= explored_list[i+1]
-            print("New Next Node: ")
-            print(nextn)
+            #print("New Next Node: ")
+            #print(nextn)
             #print(explored_list)
             #break
         else:
             nextn = explored_list[i+1]
         possible_moves = get_possible_moves(currentn)
         if(is_in_queue(nextn[1],possible_moves) and nextn[0]>currentn[0]):
-            print("found next node")
-            print(nextn)
+            #print("found next node")
+            #print(nextn)
             final_path.append(nextn)
             currentn = nextn
         i=i+1
@@ -288,24 +288,24 @@ def main():
     t_end = time.time() + 60
     while(frontier.qsize()>0 and time.time()< t_end):
         currentNode = frontier.get()
-        print("Current Node: ")
-        print(currentNode)
+        #print("Current Node: ")
+        #print(currentNode)
         tempfrontier.remove(currentNode)
         explored.append(currentNode)
         if(GoalTest(currentNode[1])):
-            print("Solution Found")
+            #print("Solution Found")
             break
         possible_actions = get_possible_moves(currentNode)
         for child_node in possible_actions:
-            print("Current Child Node: ")
-            print(child_node)
-            print("Is Current Child Node in Open List?")
-            print(is_in_queue(child_node[1],tempfrontier))
-            print("Is Current Child Node not in Closed List?")
-            print(is_in_queue(child_node[1],explored))
+            #print("Current Child Node: ")
+            #print(child_node)
+            #print("Is Current Child Node in Open List?")
+            #print(is_in_queue(child_node[1],tempfrontier))
+            #print("Is Current Child Node not in Closed List?")
+            #print(is_in_queue(child_node[1],explored))
             if (is_in_queue(child_node[1],tempfrontier)==False) and (is_in_queue(child_node[1],explored)==False):
-                    print("Adding this child node to open list")
-                    print(child_node)
+                    #print("Adding this child node to open list")
+                    #print(child_node)
                     frontier.put(child_node)
                     tempfrontier.append(child_node)
             elif(is_in_queue(child_node[1],tempfrontier)):
@@ -313,7 +313,7 @@ def main():
                 tempq = temp[0]
                 temptq = temp[1]
                 if (tempq.empty()==False):
-                    print("FOUND SAME STATE WITH LESS PATH-COST")
+                    #print("FOUND SAME STATE WITH LESS PATH-COST")
                     frontier = tempq
                     tempfrontier = temptq
         i=i+1
@@ -332,8 +332,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    
-        
-       
-        
