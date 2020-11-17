@@ -38,9 +38,12 @@ def output_pathmoves_to_file(filename,finalpath,finaltime):
 def output_searchpath_to_file(filename,searchpath):
     with open(filename, 'w',newline='') as file:
         writer = csv.writer(file)
-        for node in searchpath:
-            t_string = str(node[0]) + " " + str(node[0]) + " " + str(node[1])
-            writer.writerow([t_string])
+        if(searchpath=="no solution"):
+            writer.writerow([searchpath])
+        else:
+            for node in searchpath:
+                t_string = str(node[0]) + " " + str(node[0]) + " " + str(node[1])
+                writer.writerow([t_string])
     
 
 def CheckIfStateExists(node,list):
@@ -303,8 +306,6 @@ def filter_unvalid_moves(explored_list,init,goalstate):
     return final_path
 
 def uniform_cost_search(brd,pmfilename,spfilename):
-    openlist = []
-    closedlist = []
     initialState = (0,brd)
 
     frontier = PriorityQueue()
@@ -352,8 +353,13 @@ def uniform_cost_search(brd,pmfilename,spfilename):
         i=i+1
     t_final = time.time() - t_initial
     final_path = filter_unvalid_moves(explored,initialState,currentNode)
-    cost_of_path = final_path[len(final_path)-1][0]
-    t_string = str(cost_of_path)+ " "+str(t_final)
+    cost_of_path = ""
+    t_string=""
+    if final_path!="no solution":
+            cost_of_path = final_path[len(final_path)-1][0]
+            t_string = str(cost_of_path)+ " "+str(t_final)
+    else:
+        explored="no solution"
     output_pathmoves_to_file(pmfilename,final_path,t_string)
     output_searchpath_to_file(spfilename,explored)
 
