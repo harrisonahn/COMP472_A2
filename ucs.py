@@ -14,25 +14,33 @@ def output_pathmoves_to_file(filename,finalpath,finaltime):
     print(finaltime)
     with open(filename, 'w',newline='') as file:
         writer = csv.writer(file)
-        i=0
-        initialn=finalpath[i][1]
-        initial_string= "0 0 "+str(initialn)
-        writer.writerow([initial_string])
-        while i+1 < len(finalpath):
-            currentn=finalpath[i]
-            currentnlist = list(currentn[1].split(" "))
-            current_index_of_empty = currentnlist.index('0')
-            nextn=finalpath[i+1]
-            nextnlist = list(nextn[1].split(" "))
-            next_index_of_empty = nextnlist.index('0')
-            t_string =str(currentnlist[next_index_of_empty]) + " " + str(nextn[0]-currentn[0]) +" " + str(nextn[1])
-            print(t_string)
-            writer.writerow([t_string])
-                #do something
-            i=i+1
-        writer.writerow([finaltime])
+        if(finalpath=="no solution"):
+            writer.writerow([finalpath])
+        else:
+            i=0
+            initialn=finalpath[i][1]
+            initial_string= "0 0 "+str(initialn)
+            writer.writerow([initial_string])
+            while i+1 < len(finalpath):
+                currentn=finalpath[i]
+                currentnlist = list(currentn[1].split(" "))
+                current_index_of_empty = currentnlist.index('0')
+                nextn=finalpath[i+1]
+                nextnlist = list(nextn[1].split(" "))
+                next_index_of_empty = nextnlist.index('0')
+                t_string =str(currentnlist[next_index_of_empty]) + " " + str(nextn[0]-currentn[0]) +" " + str(nextn[1])
+                print(t_string)
+                writer.writerow([t_string])
+                    #do something
+                i=i+1
+            writer.writerow([finaltime])
         
-
+def output_searchpath_to_file(filename,searchpath):
+    with open(filename, 'w',newline='') as file:
+        writer = csv.writer(file)
+        for node in searchpath:
+            t_string = str(node[0]) + " " + str(node[0]) + " " + str(node[1])
+            writer.writerow([t_string])
     
 
 def CheckIfStateExists(node,list):
@@ -294,7 +302,7 @@ def filter_unvalid_moves(explored_list,init,goalstate):
     #final_path.reverse()
     return final_path
 
-def uniform_cost_search(brd,filename):
+def uniform_cost_search(brd,pmfilename,spfilename):
     openlist = []
     closedlist = []
     initialState = (0,brd)
@@ -346,29 +354,19 @@ def uniform_cost_search(brd,filename):
     final_path = filter_unvalid_moves(explored,initialState,currentNode)
     cost_of_path = final_path[len(final_path)-1][0]
     t_string = str(cost_of_path)+ " "+str(t_final)
-    output_pathmoves_to_file(filename,final_path,t_string)
+    output_pathmoves_to_file(pmfilename,final_path,t_string)
+    output_searchpath_to_file(spfilename,explored)
 
 
 def main():
-    openlist = []
-    closedlist = []
     board = RetrievePuzzleFromCSV('test1.txt')
-    temp = board
     i=0
     for brds in board:
-        filename = str(i)+"_ucs_solution.txt"
-        uniform_cost_search(brds,filename)
+        pathmovefilename = str(i)+"_ucs_solution.txt"
+        searchpathfilename = str(i)+"_ucs_search.txt"
+        uniform_cost_search(brds,pathmovefilename,searchpathfilename)
         i=i+1
 
-
-
-
-#board = RetrievePuzzleFromCSV('test1.txt')
-#temp = board
-
-#initialState = (0,board[0])
-
-#print(move_diagonal(initialState))
 
 if __name__ == "__main__":
     main()
