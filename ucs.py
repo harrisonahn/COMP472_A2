@@ -42,7 +42,7 @@ def output_searchpath_to_file(filename,searchpath):
             writer.writerow([searchpath])
         else:
             for node in searchpath:
-                t_string = str(node[0]) + " " + str(node[0]) + " 0 " + str(node[1])
+                t_string = str(node[0]) + " 0 " + str(node[0]) + " 0 " + str(node[1])
                 writer.writerow([t_string])
     
 
