@@ -9,6 +9,32 @@ from queue import PriorityQueue
 import time
 
 
+def output_pathmoves_to_file(filename,finalpath,finaltime):
+    print(finalpath)
+    print(finaltime)
+    with open(filename, 'w',newline='') as file:
+        writer = csv.writer(file)
+        i=0
+        initialn=finalpath[i][1]
+        initial_string= "0 0 "+str(initialn)
+        writer.writerow([initial_string])
+        while i+1 < len(finalpath):
+            currentn=finalpath[i]
+            currentnlist = list(currentn[1].split(" "))
+            current_index_of_empty = currentnlist.index('0')
+            nextn=finalpath[i+1]
+            nextnlist = list(nextn[1].split(" "))
+            next_index_of_empty = nextnlist.index('0')
+            t_string =str(currentnlist[next_index_of_empty]) + " " + str(nextn[0]-currentn[0]) +" " + str(nextn[1])
+            print(t_string)
+            writer.writerow([t_string])
+                #do something
+            i=i+1
+        writer.writerow([finaltime])
+        
+
+    
+
 def CheckIfStateExists(node,list):
     if node in list:
         return True
@@ -247,7 +273,7 @@ def filter_unvalid_moves(explored_list,init,goalstate):
             lastfpn = final_path[len(final_path)-1]
             #print("Value of i")
             i = explored_list.index(lastfpn)
-            print(i)
+            #print(i)
             #print("New Current Node: ")
             currentn = explored_list[i]
             #print(currentn)
@@ -267,13 +293,11 @@ def filter_unvalid_moves(explored_list,init,goalstate):
         i=i+1
     #final_path.reverse()
     return final_path
-def main():
+
+def uniform_cost_search(brd,filename):
     openlist = []
     closedlist = []
-    board = RetrievePuzzleFromCSV('test1.txt')
-    temp = board
-
-    initialState = (0,board[0])
+    initialState = (0,brd)
 
     frontier = PriorityQueue()
     explored = []
@@ -283,8 +307,8 @@ def main():
 
     tempfrontier.append(initialState)
     currentNode = (0,0)
-    constraint = 10000
     i=0
+    t_initial = time.time()
     t_end = time.time() + 60
     while(frontier.qsize()>0 and time.time()< t_end):
         currentNode = frontier.get()
@@ -293,7 +317,8 @@ def main():
         tempfrontier.remove(currentNode)
         explored.append(currentNode)
         if(GoalTest(currentNode[1])):
-            #print("Solution Found")
+            print("Solution Found")
+            print(currentNode)
             break
         possible_actions = get_possible_moves(currentNode)
         for child_node in possible_actions:
@@ -317,9 +342,24 @@ def main():
                     frontier = tempq
                     tempfrontier = temptq
         i=i+1
+    t_final = time.time() - t_initial
     final_path = filter_unvalid_moves(explored,initialState,currentNode)
+    cost_of_path = final_path[len(final_path)-1][0]
+    t_string = str(cost_of_path)+ " "+str(t_final)
+    output_pathmoves_to_file(filename,final_path,t_string)
 
-    print(final_path)
+
+def main():
+    openlist = []
+    closedlist = []
+    board = RetrievePuzzleFromCSV('test1.txt')
+    temp = board
+    i=0
+    for brds in board:
+        filename = str(i)+"_ucs_solution.txt"
+        uniform_cost_search(brds,filename)
+        i=i+1
+
 
 
 
