@@ -260,9 +260,6 @@ def get_possible_moves(node):
     return possible_moves
 
 def filter_unvalid_moves(explored_list,init,goalstate):
-    """Filter unvalid moves by reverse parsing
-    the explored set and creating a final path list
-    """
     if(GoalTest(goalstate[1])==False):
         return "no solution"
     #print(explored_list)
