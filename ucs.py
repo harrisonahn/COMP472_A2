@@ -304,6 +304,7 @@ def filter_unvalid_moves(explored_list,init,goalstate):
 
 def uniform_cost_search(brd,pmfilename,spfilename):
     initialState = (0,brd)
+    nosol = "no solution"
 
     frontier = PriorityQueue()
     explored = []
@@ -352,13 +353,75 @@ def uniform_cost_search(brd,pmfilename,spfilename):
     final_path = filter_unvalid_moves(explored,initialState,currentNode)
     cost_of_path = ""
     t_string=""
-    if final_path!="no solution":
+    if final_path!=nosol:
             cost_of_path = final_path[len(final_path)-1][0]
             t_string = str(cost_of_path)+ " "+str(t_final)
     else:
-        explored="no solution"
+        explored=nosol
     output_pathmoves_to_file(pmfilename,final_path,t_string)
     output_searchpath_to_file(spfilename,explored)
+
+def uniform_cs(brd):
+    initialState = (0,brd)
+    nosol = "no solution"
+
+    frontier = PriorityQueue()
+    explored = []
+
+    frontier.put(initialState)
+    tempfrontier = []
+
+    tempfrontier.append(initialState)
+    currentNode = (0,0)
+    i=0
+    t_initial = time.time()
+    t_end = time.time() + 60
+    while(frontier.qsize()>0 and time.time()< t_end):
+        currentNode = frontier.get()
+        #print("Current Node: ")
+        #print(currentNode)
+        tempfrontier.remove(currentNode)
+        explored.append(currentNode)
+        if(GoalTest(currentNode[1])):
+            print("Solution Found")
+            print(currentNode)
+            break
+        possible_actions = get_possible_moves(currentNode)
+        for child_node in possible_actions:
+            #print("Current Child Node: ")
+            #print(child_node)
+            #print("Is Current Child Node in Open List?")
+            #print(is_in_queue(child_node[1],tempfrontier))
+            #print("Is Current Child Node not in Closed List?")
+            #print(is_in_queue(child_node[1],explored))
+            if (is_in_queue(child_node[1],tempfrontier)==False) and (is_in_queue(child_node[1],explored)==False):
+                    #print("Adding this child node to open list")
+                    #print(child_node)
+                    frontier.put(child_node)
+                    tempfrontier.append(child_node)
+            elif(is_in_queue(child_node[1],tempfrontier)):
+                temp = RenewQueue(child_node,tempfrontier)
+                tempq = temp[0]
+                temptq = temp[1]
+                if (tempq.empty()==False):
+                    #print("FOUND SAME STATE WITH LESS PATH-COST")
+                    frontier = tempq
+                    tempfrontier = temptq
+        i=i+1
+    t_final = time.time() - t_initial
+    final_path = filter_unvalid_moves(explored,initialState,currentNode)
+    cost_of_path = ""
+    t_string=""
+    if final_path!=nosol:
+            cost_of_path = final_path[len(final_path)-1][0]
+            t_string = str(cost_of_path)+ " "+str(t_final)
+    else:
+        explored=nosol
+
+    return final_path,t_string,explored
+
+
+
 
 
 def main():
