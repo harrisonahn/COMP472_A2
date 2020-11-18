@@ -11,7 +11,7 @@ from queue import PriorityQueue
 from heapq import *
 
 # path to input file of puzzles
-filename = 'puzzles.txt'
+filename = 'samplePuzzles.txt'
 """ Change the heuristics_option variable to 0 for h0, 1 for hamming distance, 2 for permutation inversions"""
 heuristics_option = 2
 
@@ -595,7 +595,7 @@ def a_star(board, i):
 
     t_initial = time.time()
     t_end = time.time() + 60
-    while priorityQueue.qsize() > 0: #and time.time() < t_end:
+    while priorityQueue.qsize() > 0 and time.time() < t_end:
         currentNode = priorityQueue.get()
         #print("\nCurrent Node: ", currentNode)
         tempPriorityQueue.remove(currentNode)
