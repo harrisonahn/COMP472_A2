@@ -375,7 +375,7 @@ def uniform_cs(brd):
     currentNode = (0,0)
     i=0
     t_initial = time.time()
-    t_end = time.time() + 60
+    t_end = time.time() + 10
     while(frontier.qsize()>0 and time.time()< t_end):
         currentNode = frontier.get()
         #print("Current Node: ")
