@@ -36,33 +36,27 @@ def output_pathmoves_to_file(filename, finalpath, finaltime):
                 next_index_of_empty = nextnlist.index('0')
 
                 """determine cost of move"""
-                if (
-                        current_index_of_empty != 3 and current_index_of_empty != 7) and next_index_of_empty - current_index_of_empty == 1:
+                if (current_index_of_empty != 3 and current_index_of_empty != 7) and next_index_of_empty - current_index_of_empty == 1:
                     # this moves the tile right with a cost of 1
                     t_string = str(currentnlist[next_index_of_empty]) + " 1 " + str(nextn[1])
 
-                elif (
-                        current_index_of_empty != 0 and current_index_of_empty != 4) and next_index_of_empty - current_index_of_empty == -1:
+                elif (current_index_of_empty != 0 and current_index_of_empty != 4) and next_index_of_empty - current_index_of_empty == -1:
                     # this tile moved left with a cost of 1
                     t_string = str(currentnlist[next_index_of_empty]) + " 1 " + str(nextn[1])
 
-                elif (
-                        current_index_of_empty != 0 and current_index_of_empty != 1 and current_index_of_empty != 2 and current_index_of_empty != 3) and next_index_of_empty - current_index_of_empty == -4:
+                elif (current_index_of_empty != 0 and current_index_of_empty != 1 and current_index_of_empty != 2 and current_index_of_empty != 3) and next_index_of_empty - current_index_of_empty == -4:
                     # this tile moved up with a cost of 1
                     t_string = str(currentnlist[next_index_of_empty]) + " 1 " + str(nextn[1])
 
-                elif (
-                        current_index_of_empty != 4 and current_index_of_empty != 5 and current_index_of_empty != 6 and current_index_of_empty != 7) and next_index_of_empty - current_index_of_empty == 4:
+                elif (current_index_of_empty != 4 and current_index_of_empty != 5 and current_index_of_empty != 6 and current_index_of_empty != 7) and next_index_of_empty - current_index_of_empty == 4:
                     # this tile moved down with a cost of 1
                     t_string = str(currentnlist[next_index_of_empty]) + " 1 " + str(nextn[1])
 
-                elif (
-                        current_index_of_empty == 0 or current_index_of_empty == 4) and next_index_of_empty - current_index_of_empty == 3:
+                elif (current_index_of_empty == 0 or current_index_of_empty == 4) and next_index_of_empty - current_index_of_empty == 3:
                     # this tile did a wrap move with a cost of 2
                     t_string = str(currentnlist[next_index_of_empty]) + " 2 " + str(nextn[1])
 
-                elif (
-                        current_index_of_empty == 3 or current_index_of_empty == 7) and next_index_of_empty - current_index_of_empty == -3:
+                elif (current_index_of_empty == 3 or current_index_of_empty == 7) and next_index_of_empty - current_index_of_empty == -3:
                     # this tile did a wrap move with a cost of 2
                     t_string = str(currentnlist[next_index_of_empty]) + " 2 " + str(nextn[1])
 
@@ -407,14 +401,11 @@ def get_number_of_misplaced_tiles(tempboard):
                 result2 += 1
             elif (board[i] == 3 and board[j] == 1):
                 result2 += 1
-            elif (board[i] == 4 and (
-                    board[j] == 1 or board[j] == 3 or board[j] == 5 or board[j] == 7 or board[j] == 2)):
+            elif (board[i] == 4 and (board[j] == 1 or board[j] == 3 or board[j] == 5 or board[j] == 7 or board[j] == 2)):
                 result2 += 1
             elif (board[i] == 5 and (board[j] == 1 or board[j] == 3)):
                 result2 += 1
-            elif (board[i] == 6 and (
-                    board[j] == 1 or board[j] == 3 or board[j] == 5 or board[j] == 7 or board[j] == 2 or board[
-                j] == 4)):
+            elif (board[i] == 6 and (board[j] == 1 or board[j] == 3 or board[j] == 5 or board[j] == 7 or board[j] == 2 or board[j] == 4)):
                 result2 += 1
             elif (board[i] == 7 and (board[j] == 1 or board[j] == 3 or board[j] == 5)):
                 result2 += 1
@@ -438,42 +429,42 @@ def filter_invalid_moves(explored_list, init, goalstate):
     if (GoalPuzzle(goalstate[1]) == False):
         return "no solution"
 
-    print("\nExplored List", explored_list)
+    #print("\nExplored List", explored_list)
     final_path = []
-    print("Size of explored_list:", len(explored_list))
+    #print("Size of explored_list:", len(explored_list))
     i = 0
     currentn = explored_list[i]
     final_path.append(currentn)
-    print("Initial Node", currentn)
+    #print("Initial Node", currentn)
 
     while currentn != goalstate:
         if (i + 1 > (len(explored_list) - 1)):
             # do something
             string = "Dead end found at: (" + str(currentn[0]) + ", " + str(currentn[1]) + ")"
-            print(string)
+            #print(string)
 
             explored_list.remove(currentn)
             final_path.remove(currentn)
 
             lastfpn = final_path[len(final_path) - 1]
             i = explored_list.index(lastfpn)
-            print("Value of i:", i)
+            #print("Value of i:", i)
 
             currentn = explored_list[i]
 
             string = "\nCurrent Node: (" + str(currentn[0]) + ", " + str(currentn[1]) + ")"
-            print(string)
+            #print(string)
 
             nextn = explored_list[i + 1]
             string = "New Next Node: (" + str(nextn[0]) + ", " + str(nextn[1]) + ")"
-            print(string)
+            #print(string)
         else:
             nextn = explored_list[i + 1]
         possible_moves = get_possible_moves(currentn)
 
         if (isInQueue(nextn[1], possible_moves)):
             string = "Found Next Node: (" + str(nextn[0]) + ", " + str(nextn[1]) + ")"
-            print(string)
+            #print(string)
             final_path.append(nextn)
             currentn = nextn
         i += 1
@@ -499,10 +490,10 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
     t_initial = time.time()
     t_end = time.time() + 60
 
-    while (priorityQueue.qsize() > 0 and time.time() < t_end):
+    while priorityQueue.qsize() > 0 and time.time() < t_end:
         currentNode = priorityQueue.get()
         string = "\nCurrent Node: (" + str(currentNode[0]) + ", " + str(currentNode[1]) + ")"
-        print(string)
+        #print(string)
         tempPriorityQueue.remove(currentNode)
 
         if currentNode not in explored:
@@ -516,19 +507,19 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
         possible_actions = get_possible_moves(currentNode)
         for child_node in possible_actions:
             string = "\nCurrent Node: (" + str(child_node[0]) + ", " + str(child_node[1]) + ")"
-            print(string)
+            #print(string)
 
-            print("Is Current Child Node in Open List?")
-            print(isInQueue(child_node[1], tempPriorityQueue))
+            #print("Is Current Child Node in Open List?")
+            #print(isInQueue(child_node[1], tempPriorityQueue))
 
-            print("Is Current Child Node not in Closed List?")
-            print(isInQueue(child_node[1], explored))
+            #print("Is Current Child Node not in Closed List?")
+            #print(isInQueue(child_node[1], explored))
 
             if (isInQueue(child_node[1], tempPriorityQueue) == False) and (isInQueue(child_node[1], explored) == False):
                 priorityQueue.put(child_node)
                 tempPriorityQueue.append(child_node)
 
-                print("Adding this child node to open list")
+                #print("Adding this child node to open list")
                 priorityQueue.put(child_node)
                 tempPriorityQueue.append(child_node)
                 renewQueue(child_node, tempPriorityQueue)
@@ -536,6 +527,85 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
 
     # stopping the timer if a solution is found in less than 60 seconds
     t_final = time.time() - t_initial
+    print("Execution time:", t_final)
+
+    final_path = filter_invalid_moves(explored, initialState, currentNode)
+    # print("Final Path:", final_path)
+
+    t_string = ""
+
+    if final_path != "no solution":
+        cost_of_path = 0
+
+        for nodes in final_path:
+            g_score = nodes[2]
+            cost_of_path += g_score
+
+        t_string = str(cost_of_path) + " " + str(t_final)
+    else:
+        explored = "no solution"
+
+    output_pathmoves_to_file(pmfilename, final_path, t_string)
+    output_searchpath_to_file(spfilename, explored)
+
+
+def gbfs(board, i):
+    print("\nThis is the Greedy Best-First Search Algorithm for Puzzle", i, "with Heuristic", heuristics_option)
+
+    """Change the index in board[x] depending on puzzle number"""
+    h_score = get_h_score(heuristics_option, board)
+    initialState = (h_score, board, 0)
+
+    priorityQueue = PriorityQueue()
+    priorityQueue.put(initialState)
+    explored = []
+
+    tempPriorityQueue = []
+    tempPriorityQueue.append(initialState)
+    currentNode = (0, 0, 0)
+    i = 0
+
+    t_initial = time.time()
+    t_end = time.time() + 60
+
+    while priorityQueue.qsize() > 0: #and time.time() < t_end:
+        currentNode = priorityQueue.get()
+        string = "\nCurrent Node: (" + str(currentNode[0]) + ", " + str(currentNode[1]) + ")"
+        #print(string)
+        tempPriorityQueue.remove(currentNode)
+
+        if currentNode not in explored:
+            explored.append(currentNode)
+
+        # If the puzzle solution is found
+        if (GoalPuzzle(currentNode[1])):
+            #print("Solution Found")
+            break
+
+        possible_actions = get_possible_moves(currentNode)
+        for child_node in possible_actions:
+            string = "\nCurrent Node: (" + str(child_node[0]) + ", " + str(child_node[1]) + ")"
+            #print(string)
+
+            #print("Is Current Child Node in Open List?")
+            #print(isInQueue(child_node[1], tempPriorityQueue))
+
+            #print("Is Current Child Node not in Closed List?")
+            #print(isInQueue(child_node[1], explored))
+
+            if (isInQueue(child_node[1], tempPriorityQueue) == False) and (isInQueue(child_node[1], explored) == False):
+                priorityQueue.put(child_node)
+                tempPriorityQueue.append(child_node)
+
+                #print("Adding this child node to open list")
+                priorityQueue.put(child_node)
+                tempPriorityQueue.append(child_node)
+                renewQueue(child_node, tempPriorityQueue)
+        i += 1
+
+    # stopping the timer if a solution is found in less than 60 seconds
+    t_final = time.time() - t_initial
+    print("Execution time:", t_final)
 
     final_path = filter_invalid_moves(explored, initialState, currentNode)
     print("Final Path:", final_path)
@@ -544,6 +614,7 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
 
     if final_path != "no solution":
         cost_of_path = 0
+
         for nodes in final_path:
             g_score = nodes[2]
             cost_of_path += g_score
@@ -551,9 +622,8 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
         t_string = str(cost_of_path) + " " + str(t_final)
     else:
         explored = "no solution"
-    output_pathmoves_to_file(pmfilename, final_path, t_string)
-    output_searchpath_to_file(spfilename, explored)
 
+    return final_path, t_string, explored
 
 def main():
     board = getPuzzleFromCSV(filename)
