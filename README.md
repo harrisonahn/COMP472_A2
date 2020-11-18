@@ -3,9 +3,8 @@ https://github.com/harrisonahn/COMP472_A2
 COMP 472 Assignment 2
 
 # Running UCS
-1. Change input filename at line 148
+1. Change input filename at line 428
 2. Run main()
-
 
 # Running A*
 1. Change the variable "filename" to the corresponding input file name
