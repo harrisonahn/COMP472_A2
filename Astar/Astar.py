@@ -132,7 +132,7 @@ def move_left(node):
     li = list(node[1].split(" "))
     index_of_empty = li.index('0')
     newboard = li
-    newNode = (node[0], node[1])
+    newNode = (node[0], node[1], node[2], node[3])  # fscore, board, gscore, hscore
 
     if (index_of_empty != 3 and index_of_empty != 7):
         possible = True
@@ -143,7 +143,7 @@ def move_left(node):
         g_score += 1
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -155,7 +155,7 @@ def move_right(node):
     g_score = 0
     newboard = list(node[1].split(" "))
     index_of_empty = newboard.index('0')
-    newNode = (node[0], node[1])
+    newNode = (node[0], node[1], node[2], node[3])
     if index_of_empty != 0 and index_of_empty != 4:
         possible = True
         newboard[index_of_empty], newboard[index_of_empty - 1] = newboard[index_of_empty - 1], newboard[index_of_empty]
@@ -164,7 +164,7 @@ def move_right(node):
         g_score += 1
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -176,7 +176,7 @@ def move_up(node):
     g_score = 0
     newboard = list(node[1].split(" "))
     index_of_empty = newboard.index('0')
-    newNode = (node[0], node[1])
+    newNode = (node[0], node[1], node[2], node[3])
     if (index_of_empty != 4 and index_of_empty != 5 and index_of_empty != 6 and index_of_empty != 7):
         possible = True
         newboard[index_of_empty], newboard[index_of_empty + 4] = newboard[index_of_empty + 4], newboard[index_of_empty]
@@ -185,7 +185,7 @@ def move_up(node):
         g_score += 1
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -197,7 +197,7 @@ def move_down(node):
     g_score = 0
     newboard = list(node[1].split(" "))
     index_of_empty = newboard.index('0')
-    newNode = (node[0], node[1])
+    newNode = (node[0], node[1], node[2], node[3])
     if (index_of_empty != 0 and index_of_empty != 1 and index_of_empty != 2 and index_of_empty != 3):
         possible = True
         newboard[index_of_empty], newboard[index_of_empty - 4] = newboard[index_of_empty - 4], newboard[index_of_empty]
@@ -206,7 +206,7 @@ def move_down(node):
         g_score += 1
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -217,7 +217,7 @@ def move_wrap(node):
     g_score = 0
     newboard = list(node[1].split(" "))
     index_of_empty = newboard.index('0')
-    newNode = (node[0], node[1])
+    newNode = (node[0], node[1], node[2], node[3])
 
     if (index_of_empty == 0 or index_of_empty == 4):
         possible = True
@@ -227,7 +227,7 @@ def move_wrap(node):
         g_score += 2
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
 
     elif (index_of_empty == 3 or index_of_empty == 7):
         possible = True
@@ -237,7 +237,7 @@ def move_wrap(node):
         g_score += 2
         h_score = get_h_score(heuristics_option, newboard)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard)
+        newNode = (node[0] + f_score, newboard, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -252,8 +252,8 @@ def move_diagonal(node):
     index_of_empty = li.index('0')
     newboard1 = li
     newboard2 = li2
-    newNode1 = (node[0], node[1])
-    newNode2 = (node[0], node[1])
+    newNode1 = (node[0], node[1], node[2], node[3])
+    newNode2 = (node[0], node[1], node[2], node[3])
 
     if (index_of_empty == 0):
         possible = True
@@ -263,7 +263,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard1)
         f_score = g_score + h_score
-        newNode1 = (node[0] + f_score, newboard1)
+        newNode1 = (node[0] + f_score, newboard1, node[2] + g_score, node[3] + h_score)
 
         newboard2[index_of_empty], newboard2[index_of_empty + 7] = newboard2[index_of_empty + 7], newboard2[index_of_empty]
         space = ' '
@@ -271,7 +271,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard2)
         f_score = g_score + h_score
-        newNode2 = (node[0] + f_score, newboard2)
+        newNode2 = (node[0] + f_score, newboard2, node[2] + g_score, node[3] + h_score)
 
     elif (index_of_empty == 3):
         possible = True
@@ -282,7 +282,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard1)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard1)
+        newNode1 = (node[0] + f_score, newboard1, node[2] + g_score, node[3] + h_score)
 
         newboard2[index_of_empty], newboard2[index_of_empty + 1] = newboard2[index_of_empty + 1], newboard2[index_of_empty]
         space = ' '
@@ -290,7 +290,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard2)
         f_score = g_score + h_score
-        newNode2 = (node[0] + f_score, newboard2)
+        newNode2 = (node[0] + f_score, newboard2, node[2] + g_score, node[3] + h_score)
 
     elif (index_of_empty == 4):
         possible = True
@@ -301,7 +301,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard1)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard1)
+        newNode1 = (node[0] + f_score, newboard1, node[2] + g_score, node[3] + h_score)
 
         newboard2[index_of_empty], newboard2[index_of_empty - 1] = newboard2[index_of_empty - 1], newboard2[index_of_empty]
         space = ' '
@@ -309,7 +309,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard2)
         f_score = g_score + h_score
-        newNode2 = (node[0] + f_score, newboard2)
+        newNode2 = (node[0] + f_score, newboard2, node[2] + g_score, node[3] + h_score)
 
     elif (index_of_empty == 7):
         possible = True
@@ -320,7 +320,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard1)
         f_score = g_score + h_score
-        newNode = (node[0] + f_score, newboard1)
+        newNode1 = (node[0] + f_score, newboard1, node[2] + g_score, node[3] + h_score)
 
         newboard2[index_of_empty], newboard2[index_of_empty - 7] = newboard2[index_of_empty - 7], newboard2[index_of_empty]
         space = ' '
@@ -328,7 +328,7 @@ def move_diagonal(node):
         g_score += 3
         h_score = get_h_score(heuristics_option, newboard2)
         f_score = g_score + h_score
-        newNode2 = (node[0] + f_score, newboard2)
+        newNode2 = (node[0] + f_score, newboard2, node[2] + g_score, node[3] + h_score)
     else:
         possible = False
 
@@ -502,7 +502,7 @@ def a_star_search(board, pmfilename, spfilename, i):
     g_score = 0
     h_score = get_h_score(heuristics_option, board)
     f_score = g_score + h_score
-    initialState = (f_score, board)
+    initialState = (f_score, board, g_score, h_score)
 
     priorityQueue = PriorityQueue()
     priorityQueue.put(initialState)
@@ -510,87 +510,7 @@ def a_star_search(board, pmfilename, spfilename, i):
 
     tempPriorityQueue = []
     tempPriorityQueue.append(initialState)
-    currentNode = (0, 0)
-    i = 0
-
-    t_initial = time.time()
-    t_end = time.time() + 60
-    while priorityQueue.qsize() > 0: #and time.time() < t_end:
-        currentNode = priorityQueue.get()
-        #print("\nCurrent Node: ", currentNode)
-        tempPriorityQueue.remove(currentNode)
-
-        if currentNode not in explored:
-            explored.append(currentNode)
-
-        # If the puzzle solution is found
-        if (GoalPuzzle(currentNode[1])):
-            print("Solution Found")
-            break
-
-        possible_actions = get_possible_moves(currentNode)
-        for child_node in possible_actions:
-            #print("\nCurrent Child Node: ", child_node)
-
-            #print("Is Current Child Node in Open List?")
-            #print(isInQueue(child_node[1], tempPriorityQueue))
-
-            #print("Is Current Child Node not in Closed List?")
-            #print(isInQueue(child_node[1], explored))
-
-            if (isInQueue(child_node[1], tempPriorityQueue) == False) and (isInQueue(child_node[1], explored) == False):
-                priorityQueue.put(child_node)
-                tempPriorityQueue.append(child_node)
-
-                #print("Adding this child node to open list")
-                priorityQueue.put(child_node)
-                tempPriorityQueue.append(child_node)
-                renewQueue(child_node, tempPriorityQueue)
-        i += 1
-
-    # stopping the timer if a solution is found in less than 60 seconds
-    t_final = time.time() - t_initial
-    print("Execution time:", t_final)
-
-    final_path = filter_invalid_moves(explored, initialState, currentNode)
-    print("Final Path:", final_path)
-
-    t_string = ""
-
-    if final_path != "no solution":
-        # determine total cost of path
-        cost_of_path = 0
-
-        for nodes in final_path:
-            f_score = nodes[0]
-            h_score = get_h_score(heuristics_option, nodes[1])
-            g_score = f_score - h_score
-            cost_of_path += g_score
-
-        t_string = str(cost_of_path) + " " + str(t_final)
-    else:
-        explored = "no solution"
-
-    output_pathmoves_to_file(pmfilename, final_path, t_string)
-    output_searchpath_to_file(spfilename, explored)
-
-
-def a_star(board, i):
-    print("\nThis is the A* Search Algorithm for Puzzle", i, "with Heuristic", heuristics_option)
-
-    """Change the index in board[x] depending on puzzle number"""
-    g_score = 0
-    h_score = get_h_score(heuristics_option, board)
-    f_score = g_score + h_score
-    initialState = (f_score, board)
-
-    priorityQueue = PriorityQueue()
-    priorityQueue.put(initialState)
-    explored = []
-
-    tempPriorityQueue = []
-    tempPriorityQueue.append(initialState)
-    currentNode = (0, 0)
+    currentNode = (0, 0, 0, 0)
     i = 0
 
     t_initial = time.time()
@@ -638,15 +558,79 @@ def a_star(board, i):
     t_string = ""
 
     if final_path != "no solution":
-        # determine total cost of path
-        cost_of_path = 0
+        cost_of_path = final_path[len(final_path)-1][2]
+        t_string = str(cost_of_path) + " " + str(t_final)
+    else:
+        explored = "no solution"
 
-        for nodes in final_path:
-            f_score = nodes[0]
-            h_score = get_h_score(heuristics_option, nodes[1])
-            g_score = f_score - h_score
-            cost_of_path += g_score
+    output_pathmoves_to_file(pmfilename, final_path, t_string)
+    output_searchpath_to_file(spfilename, explored)
 
+
+def a_star(board, i):
+    print("\nThis is the A* Search Algorithm for Puzzle", i, "with Heuristic", heuristics_option)
+
+    """Change the index in board[x] depending on puzzle number"""
+    g_score = 0
+    h_score = get_h_score(heuristics_option, board)
+    f_score = g_score + h_score
+    initialState = (f_score, board, g_score, h_score)
+
+    priorityQueue = PriorityQueue()
+    priorityQueue.put(initialState)
+    explored = []
+
+    tempPriorityQueue = []
+    tempPriorityQueue.append(initialState)
+    currentNode = (0, 0, 0, 0)
+    i = 0
+
+    t_initial = time.time()
+    t_end = time.time() + 60
+    while priorityQueue.qsize() > 0 and time.time() < t_end:
+        currentNode = priorityQueue.get()
+        #print("\nCurrent Node: ", currentNode)
+        tempPriorityQueue.remove(currentNode)
+
+        if currentNode not in explored:
+            explored.append(currentNode)
+
+        # If the puzzle solution is found
+        if (GoalPuzzle(currentNode[1])):
+            print("Solution Found")
+            break
+
+        possible_actions = get_possible_moves(currentNode)
+        for child_node in possible_actions:
+            #print("\nCurrent Child Node: ", child_node)
+
+            #print("Is Current Child Node in Open List?")
+            #print(isInQueue(child_node[1], tempPriorityQueue))
+
+            #print("Is Current Child Node not in Closed List?")
+            #print(isInQueue(child_node[1], explored))
+
+            if (isInQueue(child_node[1], tempPriorityQueue) == False) and (isInQueue(child_node[1], explored) == False):
+                priorityQueue.put(child_node)
+                tempPriorityQueue.append(child_node)
+
+                #print("Adding this child node to open list")
+                priorityQueue.put(child_node)
+                tempPriorityQueue.append(child_node)
+                renewQueue(child_node, tempPriorityQueue)
+        i += 1
+
+    # stopping the timer if a solution is found in less than 60 seconds
+    t_final = time.time() - t_initial
+    print("Execution time:", t_final)
+
+    final_path = filter_invalid_moves(explored, initialState, currentNode)
+    print("Final Path:", final_path)
+
+    t_string = ""
+
+    if final_path != "no solution":
+        cost_of_path = final_path[len(final_path)-1][2]
         t_string = str(cost_of_path) + " " + str(t_final)
     else:
         explored = "no solution"
