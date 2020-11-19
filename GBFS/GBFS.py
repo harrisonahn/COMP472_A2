@@ -130,7 +130,7 @@ def move_left(node):
     li = list(node[1].split(" "))
     index_of_empty = li.index('0')
     newboard = li
-    newNode = (node[0], node[1], node[2])
+    newNode = (node[0], node[1], node[2])   # hscore, newboard, gscore
 
     if (index_of_empty != 3 and index_of_empty != 7):
         possible = True
@@ -530,17 +530,12 @@ def greedy_best_first_search(board, pmfilename, spfilename, i):
     print("Execution time:", t_final)
 
     final_path = filter_invalid_moves(explored, initialState, currentNode)
-    # print("Final Path:", final_path)
+    print("Final Path:", final_path)
 
     t_string = ""
 
     if final_path != "no solution":
-        cost_of_path = 0
-
-        for nodes in final_path:
-            g_score = nodes[2]
-            cost_of_path += g_score
-
+        cost_of_path = final_path[len(final_path)-1][2]
         t_string = str(cost_of_path) + " " + str(t_final)
     else:
         explored = "no solution"
@@ -553,8 +548,9 @@ def gbfs(board, i):
     print("\nThis is the Greedy Best-First Search Algorithm for Puzzle", i, "with Heuristic", heuristics_option)
 
     """Change the index in board[x] depending on puzzle number"""
+    g_score = 0
     h_score = get_h_score(heuristics_option, board)
-    initialState = (h_score, board, 0)
+    initialState = (h_score, board, g_score)
 
     priorityQueue = PriorityQueue()
     priorityQueue.put(initialState)
@@ -613,25 +609,21 @@ def gbfs(board, i):
     t_string = ""
 
     if final_path != "no solution":
-        cost_of_path = 0
-
-        for nodes in final_path:
-            g_score = nodes[2]
-            cost_of_path += g_score
-
+        cost_of_path = final_path[len(final_path)-1][2]
         t_string = str(cost_of_path) + " " + str(t_final)
     else:
         explored = "no solution"
 
     return final_path, t_string, explored
 
+
 def main():
     board = getPuzzleFromCSV(filename)
     i = 0
 
     for brds in board:
-        pathmovefilename = str(i) + "_astar-h" + str(heuristics_option) + "_solution.txt"
-        searchpathfilename = str(i) + "_astar-h" + str(heuristics_option) + "_search.txt"
+        pathmovefilename = str(i) + "_gbfs-h" + str(heuristics_option) + "_solution.txt"
+        searchpathfilename = str(i) + "_gbfs-h" + str(heuristics_option) + "_search.txt"
         greedy_best_first_search(brds, pathmovefilename, searchpathfilename, i)
         i += 1
 

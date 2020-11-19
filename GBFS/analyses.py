@@ -41,7 +41,7 @@ def main():
 
     sum_of_path_lengths = 0
     for item in average_pm_length:
-        sum_of_path_lengths+= item
+        sum_of_path_lengths += item
 
     average_path_length = (sum_of_path_lengths/len(a))
 
